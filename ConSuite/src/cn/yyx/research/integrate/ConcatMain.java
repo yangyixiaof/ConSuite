@@ -18,9 +18,14 @@ public class ConcatMain {
 			Process process = runtime.exec("java -jar evosuite-master-1.0.4-SNAPSHOT.jar -Dassertions=false" + sb.toString());
 			InputStream es = process.getErrorStream();
 			InputStream is = process.getInputStream();
-			new Thread(new DisplayInfo(is, System.out)).start();
-			new Thread(new DisplayInfo(es, System.err)).start();
+			Thread t1 = new Thread(new DisplayInfo(is, System.out));
+			t1.start();
+			Thread t2 = new Thread(new DisplayInfo(es, System.err));
+			t2.start();
 			process.waitFor();
+			t1.join();
+			t2.join();
+			Thread.sleep(2000);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
