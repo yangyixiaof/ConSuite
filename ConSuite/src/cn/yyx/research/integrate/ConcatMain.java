@@ -31,6 +31,8 @@ public class ConcatMain {
 		}
 		Slicer s = new Slicer("evosuite-tests");
 		s.SliceSuffixedTestInDirectory("_ESTest");
+		System.out.flush();
+		System.err.flush();
 	}
 
 }

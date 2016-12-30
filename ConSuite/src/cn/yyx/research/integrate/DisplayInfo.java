@@ -42,6 +42,8 @@ public class DisplayInfo implements Runnable{
 			e.printStackTrace();
 		}
 		System.out.println("Thread " + ps.getClass() + " Over!");
+		System.out.flush();
+		System.err.flush();
 	}
 	
 }
