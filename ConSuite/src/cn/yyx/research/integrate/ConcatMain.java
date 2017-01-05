@@ -9,6 +9,8 @@ public class ConcatMain {
 	public static void main(String[] args) {
 		// org.evosuite.EvoSuite.main(args);
 		
+		
+		
 		try {
 			Runtime runtime = Runtime.getRuntime();
 			StringBuffer sb = new StringBuffer();
@@ -29,6 +31,7 @@ public class ConcatMain {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 		Slicer s = new Slicer("evosuite-tests");
 		s.SliceSuffixedTestInDirectory("_ESTest");
 		System.out.flush();
