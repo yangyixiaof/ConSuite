@@ -22,7 +22,8 @@ public class ConcatMain {
 			process.waitFor();
 			t1.join();
 			t2.join();
-			Thread.sleep(2000);
+			Thread.sleep(1000);
+			SystemStreamUtil.Flush();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
