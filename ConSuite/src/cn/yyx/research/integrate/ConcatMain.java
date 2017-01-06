@@ -3,6 +3,8 @@ package cn.yyx.research.integrate;
 import java.io.InputStream;
 
 import cn.yyx.research.slice.Slicer;
+import cn.yyx.research.util.CommandUtil;
+import cn.yyx.research.util.SystemStreamUtil;
 
 public class ConcatMain {
 	
@@ -38,8 +40,14 @@ public class ConcatMain {
 		
 		Slicer s = new Slicer("evosuite-tests");
 		s.SliceSuffixedTestInDirectory("_ESTest");
-		System.out.flush();
-		System.err.flush();
+		SystemStreamUtil.Flush();
+		
+		String projectcp = CommandUtil.FindProjectClassPath(args);
+		String pathsep = System.getProperty("path.separator");
+		cmd = "javac " + Slicer.consuitedir + "/*.java" + " -cp ." + (projectcp == null ? "" : (pathsep + projectcp)) + pathsep + "evosuite-standalone-runtime-1.0.4-SNAPSHOT";
+		cm.RunOneProcess(cmd);
+		
+		
 	}
 
 }

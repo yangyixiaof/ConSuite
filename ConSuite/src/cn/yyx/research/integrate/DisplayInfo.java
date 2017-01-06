@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 
+import cn.yyx.research.util.SystemStreamUtil;
+
 public class DisplayInfo implements Runnable{
 	
 	public static final int MaxCount = 25;
@@ -42,8 +44,7 @@ public class DisplayInfo implements Runnable{
 			e.printStackTrace();
 		}
 		System.out.println("Thread " + ps.getClass() + " Over!");
-		System.out.flush();
-		System.err.flush();
+		SystemStreamUtil.Flush();
 	}
 	
 }
