@@ -55,7 +55,7 @@ public class ConcatMain {
 			File f = fitr.next();
 			cmd = "javac " + f.getAbsolutePath() + " -cp ." + (projectcp == null ? "" : (pathsep + projectcp)) + pathsep + "evosuite-standalone-runtime-1.0.4-SNAPSHOT";
 			cm.RunOneProcess(cmd);
-			System.out.println("Successfully compile java file:" + f.getAbsolutePath() + ".");
+			System.out.println("Successfully compile the java file:" + f.getAbsolutePath() + ".");
 		}
 		
 		// TODO use rvpredict to run each file.
