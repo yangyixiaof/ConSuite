@@ -29,8 +29,6 @@ public class ConcatMain {
 	public static void main(String[] args) {
 		ConcatMain cm = new ConcatMain();
 		
-		
-		
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < args.length; i++) {
 			sb.append(" " + args[i]);
