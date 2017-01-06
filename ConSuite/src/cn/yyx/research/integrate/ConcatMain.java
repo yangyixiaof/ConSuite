@@ -1,9 +1,12 @@
 package cn.yyx.research.integrate;
 
+import java.io.File;
 import java.io.InputStream;
+import java.util.Iterator;
 
 import cn.yyx.research.slice.Slicer;
 import cn.yyx.research.util.CommandUtil;
+import cn.yyx.research.util.FileIterator;
 import cn.yyx.research.util.SystemStreamUtil;
 
 public class ConcatMain {
@@ -45,8 +48,15 @@ public class ConcatMain {
 		
 		String projectcp = CommandUtil.FindProjectClassPath(args);
 		String pathsep = System.getProperty("path.separator");
-		cmd = "javac " + Slicer.consuitedir + "/*.java" + " -cp ." + (projectcp == null ? "" : (pathsep + projectcp)) + pathsep + "evosuite-standalone-runtime-1.0.4-SNAPSHOT";
-		cm.RunOneProcess(cmd);
+		FileIterator fi = new FileIterator(Slicer.consuitedir, ".java");
+		Iterator<File> fitr = fi.EachFileIterator();
+		while (fitr.hasNext())
+		{
+			File f = fitr.next();
+			cmd = "javac " + f.getAbsolutePath() + " -cp ." + (projectcp == null ? "" : (pathsep + projectcp)) + pathsep + "evosuite-standalone-runtime-1.0.4-SNAPSHOT";
+			cm.RunOneProcess(cmd);
+			System.out.println("Successfully compile java file:" + f.getAbsolutePath() + ".");
+		}
 		
 		
 	}
