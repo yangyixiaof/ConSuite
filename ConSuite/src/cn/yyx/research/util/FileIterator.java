@@ -8,12 +8,12 @@ import java.util.List;
 public class FileIterator {
 	
 	String dir = null;
-	String endfix = null;
+	String pattern = null;
 	List<File> files = new LinkedList<File>();
 	
-	public FileIterator(String dir, String endfix) {
+	public FileIterator(String dir, String pattern) {
 		this.dir = dir;
-		this.endfix = endfix;
+		this.pattern = pattern;
 		IterateAllFiles(new File(dir));
 	}
 	
@@ -25,8 +25,8 @@ public class FileIterator {
 			for (File f : fall)
 			{
 				if (!f.isDirectory()) {
-					if (endfix != null) {
-						if (f.getName().endsWith(endfix)) {
+					if (pattern != null) {
+						if (f.getName().endsWith(pattern)) {
 							files.add(f);
 						}
 					} else {

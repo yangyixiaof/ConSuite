@@ -43,7 +43,7 @@ public class DisplayInfo implements Runnable{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println("Thread " + ps.getClass() + " Over!");
+		// System.out.println("Thread " + ps.getClass() + " Over!");
 		SystemStreamUtil.Flush();
 	}
 	
