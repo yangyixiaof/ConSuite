@@ -137,7 +137,6 @@ public class ConcatMain {
 			String full_name = temp_full_name.substring(0, temp_full_name.length()-".class".length()).replace('/', '.');
 			cmd = "ant -f run.xml detect_race -Dtest_class=" + full_name + "-Dclass_path=" + classpath;
 			
-			// TODO
 			DisplayInfoAndConsumeCalfuzzerResult out = new DisplayInfoAndConsumeCalfuzzerResult(System.out);
 			DisplayInfoAndConsumeCalfuzzerResult err = new DisplayInfoAndConsumeCalfuzzerResult(System.err);
 			cm.RunOneProcess(cmd.split(" "), false, out, err);
