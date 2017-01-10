@@ -8,15 +8,14 @@ import java.io.PrintStream;
 
 import cn.yyx.research.util.SystemStreamUtil;
 
-public class DisplayInfo implements Runnable{
+public class DisplayInfo implements Runnable {
 	
 	public static final int MaxCount = 25;
 	
-	InputStream is = null;
-	PrintStream ps = null;
+	protected InputStream is = null;
+	protected PrintStream ps = null;
 	
-	public DisplayInfo(InputStream is, PrintStream out) {
-		this.is = is;
+	public DisplayInfo(PrintStream out) {
 		this.ps = out;
 	}
 
@@ -29,6 +28,7 @@ public class DisplayInfo implements Runnable{
 			while ((oneline = br.readLine()) != null)
 			{
 				oneline = oneline.trim();
+				HandleInformation(oneline);
 				if (oneline.startsWith("[Progress:")) {
 					count++;
 					if (count > MaxCount)
@@ -45,6 +45,15 @@ public class DisplayInfo implements Runnable{
 		}
 		// System.out.println("Thread " + ps.getClass() + " Over!");
 		SystemStreamUtil.Flush();
+	}
+	
+	public void setIs(InputStream is) {
+		this.is = is;
+	}
+	
+	public void HandleInformation(String oneline)
+	{
+		// do nothing.
 	}
 	
 }

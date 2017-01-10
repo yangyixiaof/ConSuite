@@ -4,11 +4,14 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import cn.yyx.research.slice.Slicer;
 import cn.yyx.research.util.CommandUtil;
 import cn.yyx.research.util.FileIterator;
+import cn.yyx.research.util.FileUtil;
 import cn.yyx.research.util.SystemStreamUtil;
 
 public class ConcatMain {
@@ -54,7 +57,7 @@ public class ConcatMain {
 		return rarr;
 	}
 
-	public void RunOneProcess(String[] cmd, boolean use8) {
+	public void RunOneProcess(String[] cmd, boolean use8, DisplayInfo out, DisplayInfo err) {
 		try {
 			ProcessBuilder pb = new ProcessBuilder(cmd); // "java", "-jar", "Test3.jar"
 			// pb.directory(new File("F:\\dist"));
@@ -70,11 +73,13 @@ public class ConcatMain {
 			}
 			
 			Process process = pb.start();
-			InputStream es = process.getErrorStream();
 			InputStream is = process.getInputStream();
-			Thread t1 = new Thread(new DisplayInfo(is, System.out));
+			out.setIs(is);
+			InputStream es = process.getErrorStream();
+			err.setIs(es);
+			Thread t1 = new Thread(out);
 			t1.start();
-			Thread t2 = new Thread(new DisplayInfo(es, System.err));
+			Thread t2 = new Thread(err);
 			t2.start();
 			process.waitFor();
 			t1.join();
@@ -95,7 +100,7 @@ public class ConcatMain {
 			sb.append(" " + args[i]);
 		}
 		String cmd = "java -jar evosuite-master-1.0.4-SNAPSHOT.jar -Dassertions=false" + sb.toString();
-		cm.RunOneProcess(cmd.split(" "), true);
+		cm.RunOneProcess(cmd.split(" "), true, new DisplayInfo(System.out), new DisplayInfo(System.err));
 
 		Slicer s = new Slicer("evosuite-tests");
 		s.SliceSuffixedTestInDirectory("_ESTest");
@@ -116,7 +121,7 @@ public class ConcatMain {
 			File f = fitr1.next();
 			cmd = "javac " + f.getAbsolutePath() + " -d classes -cp "
 					+ classpath;
-			cm.RunOneProcess(cmd.split(" "), false);
+			cm.RunOneProcess(cmd.split(" "), false, new DisplayInfo(System.out), new DisplayInfo(System.err));
 			System.out.println("Successfully compile the java file:" + f.getAbsolutePath() + ".");
 		}
 
@@ -131,11 +136,23 @@ public class ConcatMain {
 			String temp_full_name = f_abosulate_path.substring(parent_path.length());
 			String full_name = temp_full_name.substring(0, temp_full_name.length()-".class".length()).replace('/', '.');
 			cmd = "ant -f run.xml detect_race -Dtest_class=" + full_name + "-Dclass_path=" + classpath;
-			cm.RunOneProcess(cmd.split(" "), false);
-			System.out.println("Successfully detect the race in:" + f.getAbsolutePath() + ".");
+			
+			// TODO
+			DisplayInfoAndConsumeCalfuzzerResult out = new DisplayInfoAndConsumeCalfuzzerResult(System.out);
+			DisplayInfoAndConsumeCalfuzzerResult err = new DisplayInfoAndConsumeCalfuzzerResult(System.err);
+			cm.RunOneProcess(cmd.split(" "), false, out, err);
+			List<String> result = new LinkedList<String>();
+			result.add("=====" + full_name + " data_race" + "=====");
+			result.addAll(out.GetRaces());
+			result.addAll(err.GetRaces());
+			result.add("\n");
+			
+			FileUtil.AppendToFile("result.1k", result);
+			
+			System.out.println("Successfully detect the race in:" + full_name + ".");
 			
 			cmd = "ant -f run.xml clean";
-			cm.RunOneProcess(cmd.split(" "), false);
+			cm.RunOneProcess(cmd.split(" "), false, new DisplayInfo(System.out), new DisplayInfo(System.err));
 		}
 	}
 
