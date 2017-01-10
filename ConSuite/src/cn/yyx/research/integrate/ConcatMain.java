@@ -145,7 +145,7 @@ public class ConcatMain {
 			result.add("=====" + full_name + " data_race" + "=====");
 			result.addAll(out.GetRaces());
 			result.addAll(err.GetRaces());
-			result.add("\n");
+			result.add(System.getProperty("line.separator"));
 			
 			FileUtil.AppendToFile("result.1k", result);
 			
