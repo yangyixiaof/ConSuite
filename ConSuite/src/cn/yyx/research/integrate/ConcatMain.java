@@ -119,6 +119,9 @@ public class ConcatMain {
 		s.SliceSuffixedTestInDirectory("_ESTest");
 		SystemStreamUtil.Flush();
 
+		// ============ start compiling! ============
+		System.out.println("============ start compiling! ============");
+		
 		File classes = new File(Compiled_Classpath);
 		if (classes.exists()) {
 			FileUtil.DeleteFolder(classes.getAbsolutePath());
@@ -136,8 +139,11 @@ public class ConcatMain {
 			cm.RunOneProcess(cmd.split(" "), false, new DisplayInfo(System.out), new DisplayInfo(System.err));
 			System.out.println("Successfully compile the java file:" + f.getAbsolutePath() + ".");
 		}
-
-		// use calfuzzer to run each file.
+		SystemStreamUtil.Flush();
+		
+		// ============ start detecting bugs! ============
+		System.out.println("============ start detecting bugs! ============");
+		
 		classpath += (pathsep + "calfuzzer.jar" + pathsep + Compiled_Classpath);
 		String parent_path = new File("haha").getAbsolutePath().replace('\\', '/') + "/" + Compiled_Classpath + "/";
 		FileIterator fi2 = new FileIterator(Compiled_Classpath, "TestCase([0-9]+)\\.class$");
@@ -167,6 +173,7 @@ public class ConcatMain {
 			cmd = "ant -f run.xml clean";
 			cm.RunOneProcess(cmd.split(" "), false, new DisplayInfo(System.out), new DisplayInfo(System.err));
 		}
+		SystemStreamUtil.Flush();
 		if (classes.exists()) {
 			FileUtil.DeleteFolder(classes.getAbsolutePath());
 		}
