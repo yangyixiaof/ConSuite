@@ -30,23 +30,13 @@ public class ConcatMain {
 	public ConcatMain(String[] args) {
 		for (int i = 0; i < args.length; i++) {
 			String one_arg = args[i].trim();
-//			boolean java7 = false;
-//			boolean java8 = false;
 			if (one_arg.startsWith("-Djava")) {
 				if (one_arg.startsWith("-Djava7")) {
-//					java7 = true;
 					Java7_Home = one_arg.substring("-Djava7=".length()).replace('\\', '/');
 				}
 				if (one_arg.startsWith("-Djava8")) {
-//					java8 = true;
 					Java8_Home = one_arg.substring("-Djava8=".length()).replace('\\', '/');
 				}
-//				if (!java7) {
-//					Java7_Home = System.getenv("JAVA_HOME").replace('\\', '/');
-//				}
-//				if (!java8) {
-//					Java8_Home = System.getenv("JAVA_HOME").replace('\\', '/');
-//				}
 			} else if (one_arg.startsWith("-Dtask")) {
 				task_type = one_arg.substring("-Dtask=".length());
 			} else {
