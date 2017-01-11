@@ -128,7 +128,7 @@ public class ConcatMain {
 		String projectcp = CommandUtil.FindProjectClassPath(ref_args);
 		String pathsep = System.getProperty("path.separator");
 		String classpath = "." + (projectcp == null ? "" : (pathsep + projectcp)) + pathsep
-				+ "evosuite-standalone-runtime-1.0.4-SNAPSHOT";
+				+ "evosuite-standalone-runtime-1.0.4-SNAPSHOT.jar";
 		FileIterator fi1 = new FileIterator(Slicer.consuitedir, ".+(\\.java)$");
 		Iterator<File> fitr1 = fi1.EachFileIterator();
 		while (fitr1.hasNext()) {
