@@ -25,8 +25,8 @@ public class FileIterator {
 			for (File f : fall)
 			{
 				if (!f.isDirectory()) {
-					if (pattern != null) {
-						if (f.getName().endsWith(pattern)) {
+					if (pattern != null && !pattern.equals("")) {
+						if (f.getName().matches(pattern)) {
 							files.add(f);
 						}
 					} else {

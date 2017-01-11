@@ -15,19 +15,20 @@ import cn.yyx.research.util.FileUtil;
 import cn.yyx.research.util.SystemStreamUtil;
 
 public class ConcatMain {
-	
+
 	private String Java7_Home = null;
 	private String Java8_Home = null;
-	
-	private String task_type = null;
-	
+
+	private String task_type = null; // {race-analysis, deadlock-analysis,
+										// atomfuzzer-analysis,
+										// predictest-analysis}
+
 	public static final String Compiled_Classpath = "classes";
-	
+
 	private ArrayList<String> refined_args = new ArrayList<String>();
-	
+
 	public ConcatMain(String[] args) {
-		for (int i=0;i<args.length;i++)
-		{
+		for (int i = 0; i < args.length; i++) {
 			String one_arg = args[i].trim();
 			boolean java7 = false;
 			boolean java8 = false;
@@ -40,9 +41,9 @@ public class ConcatMain {
 					java8 = true;
 					Java8_Home = one_arg.substring("-Djava8=".length()).replace('\\', '/');
 				}
-				if (!java7 && !java8)
-				{
-					System.err.println("Error! we need only both java7 path and java8 path set through -Djava7= or -Djava8=.");
+				if (!java7 && !java8) {
+					System.err.println(
+							"Error! we need only both java7 path and java8 path set through -Djava7= or -Djava8=.");
 				}
 				if (!java7) {
 					Java7_Home = System.getenv("JAVA_HOME").replace('\\', '/');
@@ -56,16 +57,14 @@ public class ConcatMain {
 				refined_args.add(one_arg);
 			}
 		}
-		if (Task_type() == null)
-		{
-			task_type = "detect_race";
+		if (Task_type() == null) {
+			task_type = "race-analysis";
 		}
 		assert Java7_Home != null;
 		assert Java8_Home != null;
 	}
-	
-	public String[] GetRefinedArgs()
-	{
+
+	public String[] GetRefinedArgs() {
 		String[] rarr = new String[refined_args.size()];
 		rarr = refined_args.toArray(rarr);
 		return rarr;
@@ -73,19 +72,18 @@ public class ConcatMain {
 
 	public void RunOneProcess(String[] cmd, boolean use8, DisplayInfo out, DisplayInfo err) {
 		try {
-			ProcessBuilder pb = new ProcessBuilder(cmd); // "java", "-jar", "Test3.jar"
+			ProcessBuilder pb = new ProcessBuilder(cmd); // "java", "-jar",
+															// "Test3.jar"
 			// pb.directory(new File("F:\\dist"));
 			Map<String, String> map = pb.environment();
-			
-			if ((use8 && Java8_Home != null))
-			{
+
+			if ((use8 && Java8_Home != null)) {
 				map.put("JAVA_HOME", Java8_Home);
 			}
-			if (!use8 && Java7_Home != null)
-			{
+			if (!use8 && Java7_Home != null) {
 				map.put("JAVA_HOME", Java7_Home);
 			}
-			
+
 			Process process = pb.start();
 			InputStream is = process.getInputStream();
 			out.setIs(is);
@@ -128,30 +126,31 @@ public class ConcatMain {
 		classes.mkdir();
 		String projectcp = CommandUtil.FindProjectClassPath(args);
 		String pathsep = System.getProperty("path.separator");
-		String classpath = "."+(projectcp == null ? "" : (pathsep + projectcp)) + pathsep
+		String classpath = "." + (projectcp == null ? "" : (pathsep + projectcp)) + pathsep
 				+ "evosuite-standalone-runtime-1.0.4-SNAPSHOT";
 		FileIterator fi1 = new FileIterator(Slicer.consuitedir, "\\.java$");
 		Iterator<File> fitr1 = fi1.EachFileIterator();
 		while (fitr1.hasNext()) {
 			File f = fitr1.next();
-			cmd = "javac " + f.getAbsolutePath() + " -d classes -cp "
-					+ classpath;
+			cmd = "javac " + f.getAbsolutePath() + " -d classes -cp " + classpath;
 			cm.RunOneProcess(cmd.split(" "), false, new DisplayInfo(System.out), new DisplayInfo(System.err));
 			System.out.println("Successfully compile the java file:" + f.getAbsolutePath() + ".");
 		}
 
 		// use calfuzzer to run each file.
 		classpath += (pathsep + "calfuzzer.jar" + pathsep + Compiled_Classpath);
-		String parent_path = new File("haha").getAbsolutePath().replace('\\', '/')+"/"+Compiled_Classpath+"/";
+		String parent_path = new File("haha").getAbsolutePath().replace('\\', '/') + "/" + Compiled_Classpath + "/";
 		FileIterator fi2 = new FileIterator(Compiled_Classpath, "TestCase([0-9]+)\\.class$");
 		Iterator<File> fitr2 = fi2.EachFileIterator();
 		while (fitr2.hasNext()) {
 			File f = fitr2.next();
 			String f_abosulate_path = f.getAbsolutePath().replace('\\', '/');
 			String temp_full_name = f_abosulate_path.substring(parent_path.length());
-			String full_name = temp_full_name.substring(0, temp_full_name.length()-".class".length()).replace('/', '.');
-			cmd = "ant -f run.xml " + task_type + " -Dtest_class=" + full_name + "-Dclass_path=" + classpath;
-			
+			String full_name = temp_full_name.substring(0, temp_full_name.length() - ".class".length()).replace('/',
+					'.');
+			cmd = "ant -f run.xml calfuzzer_run -Dtest_class=" + full_name + " -Dtask_type=" + task_type
+					+ " -Dclass_path=" + classpath;
+
 			DisplayInfoAndConsumeCalfuzzerResult out = new DisplayInfoAndConsumeCalfuzzerResult(System.out);
 			DisplayInfoAndConsumeCalfuzzerResult err = new DisplayInfoAndConsumeCalfuzzerResult(System.err);
 			cm.RunOneProcess(cmd.split(" "), false, out, err);
@@ -160,11 +159,11 @@ public class ConcatMain {
 			result.addAll(out.GetRaces());
 			result.addAll(err.GetRaces());
 			result.add(System.getProperty("line.separator"));
-			
+
 			FileUtil.AppendToFile("calfuzzer_result.1k", result);
-			
+
 			System.out.println("Successfully " + task_type + " in:" + full_name + ".");
-			
+
 			cmd = "ant -f run.xml clean";
 			cm.RunOneProcess(cmd.split(" "), false, new DisplayInfo(System.out), new DisplayInfo(System.err));
 		}
@@ -173,5 +172,5 @@ public class ConcatMain {
 	public String Task_type() {
 		return task_type;
 	}
-	
+
 }
