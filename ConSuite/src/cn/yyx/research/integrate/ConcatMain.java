@@ -173,11 +173,10 @@ public class ConcatMain {
 			FileUtil.AppendToFile("calfuzzer_result.1k", result);
 
 			System.out.println("Successfully " + task_type + " in:" + full_name + ".");
-
-			cmd = ant_cmd + " -f run.xml clean";
-			cm.RunOneProcess(cmd.split(" "), false, new DisplayInfo(System.out), new DisplayInfo(System.err));
 		}
 		SystemStreamUtil.Flush();
+		cmd = ant_cmd + " -f run.xml clean_here";
+		cm.RunOneProcess(cmd.split(" "), false, new DisplayInfo(System.out), new DisplayInfo(System.err));
 		if (classes.exists()) {
 			FileUtil.DeleteFolder(classes.getAbsolutePath());
 		}
