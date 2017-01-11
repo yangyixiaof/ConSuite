@@ -149,13 +149,21 @@ public class ConcatMain {
 		}
 		
 		classpath += (pathsep + "calfuzzer.jar" + pathsep + Compiled_Classpath);
-		String parent_path = new File("haha").getAbsolutePath().replace('\\', '/') + "/" + Compiled_Classpath + "/";
+		String parent_path = new File(Compiled_Classpath).getAbsolutePath().replace('\\', '/') + "/";
 		FileIterator fi2 = new FileIterator(Compiled_Classpath, ".+(TestCase([0-9]+)\\.class)$");
 		Iterator<File> fitr2 = fi2.EachFileIterator();
 		while (fitr2.hasNext()) {
 			File f = fitr2.next();
 			String f_abosulate_path = f.getAbsolutePath().replace('\\', '/');
 			String temp_full_name = f_abosulate_path.substring(parent_path.length());
+			
+			
+			// TODO testing.
+			System.out.println("parent_path:" + parent_path);
+			System.out.println("f_path:" + f_abosulate_path);
+			System.exit(1);
+			
+			
 			String full_name = temp_full_name.substring(0, temp_full_name.length() - ".class".length()).replace('/',
 					'.');
 			cmd = ant_cmd + " -f run.xml calfuzzer_run -Dtest_class=" + full_name + " -Dtask_type=" + task_type
