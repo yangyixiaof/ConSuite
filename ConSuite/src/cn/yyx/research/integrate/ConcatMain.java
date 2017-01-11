@@ -146,7 +146,7 @@ public class ConcatMain {
 		
 		classpath += (pathsep + "calfuzzer.jar" + pathsep + Compiled_Classpath);
 		String parent_path = new File("haha").getAbsolutePath().replace('\\', '/') + "/" + Compiled_Classpath + "/";
-		FileIterator fi2 = new FileIterator(Compiled_Classpath, "TestCase([0-9]+)(\\.class)$");
+		FileIterator fi2 = new FileIterator(Compiled_Classpath, ".+(TestCase([0-9]+)\\.class)$");
 		Iterator<File> fitr2 = fi2.EachFileIterator();
 		while (fitr2.hasNext()) {
 			File f = fitr2.next();
