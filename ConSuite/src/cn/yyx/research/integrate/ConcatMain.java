@@ -156,7 +156,7 @@ public class ConcatMain {
 			DisplayInfoAndConsumeCalfuzzerResult err = new DisplayInfoAndConsumeCalfuzzerResult(System.err);
 			cm.RunOneProcess(cmd.split(" "), false, out, err);
 			List<String> result = new LinkedList<String>();
-			result.add("=====" + full_name + " data_race" + "=====");
+			result.add("========== " + full_name + " data_race" + " ==========");
 			result.addAll(out.GetRaces());
 			result.addAll(err.GetRaces());
 			result.add(System.getProperty("line.separator"));
