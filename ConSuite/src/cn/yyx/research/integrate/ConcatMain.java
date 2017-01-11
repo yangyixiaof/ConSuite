@@ -10,6 +10,7 @@ import java.util.Map;
 
 import cn.yyx.research.slice.Slicer;
 import cn.yyx.research.util.CommandUtil;
+import cn.yyx.research.util.EnvironmentUtil;
 import cn.yyx.research.util.FileIterator;
 import cn.yyx.research.util.FileUtil;
 import cn.yyx.research.util.SystemStreamUtil;
@@ -136,6 +137,12 @@ public class ConcatMain {
 		// ============ start detecting bugs! ============
 		System.out.println("============ start detecting bugs! ============");
 		
+		String ant_cmd = "ant";
+		if (EnvironmentUtil.IsWindows())
+		{
+			ant_cmd = "ant.bat";
+		}
+		
 		classpath += (pathsep + "calfuzzer.jar" + pathsep + Compiled_Classpath);
 		String parent_path = new File("haha").getAbsolutePath().replace('\\', '/') + "/" + Compiled_Classpath + "/";
 		FileIterator fi2 = new FileIterator(Compiled_Classpath, ".+(TestCase([0-9]+)\\.class)$");
@@ -146,7 +153,7 @@ public class ConcatMain {
 			String temp_full_name = f_abosulate_path.substring(parent_path.length());
 			String full_name = temp_full_name.substring(0, temp_full_name.length() - ".class".length()).replace('/',
 					'.');
-			cmd = "ant -f run.xml calfuzzer_run -Dtest_class=" + full_name + " -Dtask_type=" + task_type
+			cmd = ant_cmd + " -f run.xml calfuzzer_run -Dtest_class=" + full_name + " -Dtask_type=" + task_type
 					+ " -Dclass_path=" + classpath;
 
 			DisplayInfoAndConsumeCalfuzzerResult out = new DisplayInfoAndConsumeCalfuzzerResult(System.out);
@@ -162,7 +169,7 @@ public class ConcatMain {
 
 			System.out.println("Successfully " + task_type + " in:" + full_name + ".");
 
-			cmd = "ant -f run.xml clean";
+			cmd = ant_cmd + " -f run.xml clean";
 			cm.RunOneProcess(cmd.split(" "), false, new DisplayInfo(System.out), new DisplayInfo(System.err));
 		}
 		SystemStreamUtil.Flush();
