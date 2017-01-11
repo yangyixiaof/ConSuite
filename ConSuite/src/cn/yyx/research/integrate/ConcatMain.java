@@ -29,11 +29,11 @@ public class ConcatMain {
 	private ArrayList<String> refined_args = new ArrayList<String>();
 
 	public ConcatMain(String[] args) {
-		for (String arg : args)
-		{
-			System.err.println("arg:" + arg);
-		}
-		System.exit(1);
+//		for (String arg : args)
+//		{
+//			System.err.println("arg:" + arg);
+//		}
+//		System.exit(1);
 		for (int i = 0; i < args.length; i++) {
 			String one_arg = args[i].trim();
 			if (one_arg.startsWith("-Djava")) {
