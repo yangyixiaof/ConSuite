@@ -167,6 +167,9 @@ public class ConcatMain {
 			cmd = "ant -f run.xml clean";
 			cm.RunOneProcess(cmd.split(" "), false, new DisplayInfo(System.out), new DisplayInfo(System.err));
 		}
+		if (classes.exists()) {
+			classes.delete();
+		}
 	}
 
 	public String Task_type() {

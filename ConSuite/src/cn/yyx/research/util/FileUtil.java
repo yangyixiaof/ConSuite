@@ -35,4 +35,59 @@ public class FileUtil {
 		}
 	}
 	
+	public static boolean DeleteFolder(String sPath) {
+		boolean flag = false;
+		File file = new File(sPath);
+		if (!file.exists()) {
+			return flag;
+		} else {
+			if (file.isFile()) {
+				return DeleteFile(sPath);
+			} else {
+				return DeleteDirectory(sPath);
+			}
+		}
+	}
+
+	public static boolean DeleteFile(String sPath) {
+		boolean flag = false;
+		File file = new File(sPath);
+		if (file.isFile() && file.exists()) {
+			file.delete();
+			flag = true;
+		}
+		return flag;
+	}
+
+	public static boolean DeleteDirectory(String sPath) {
+		if (!sPath.endsWith(File.separator)) {
+			sPath = sPath + File.separator;
+		}
+		File dirFile = new File(sPath);
+		if (!dirFile.exists() || !dirFile.isDirectory()) {
+			return false;
+		}
+		boolean flag = true;
+		File[] files = dirFile.listFiles();
+		for (int i = 0; i < files.length; i++) {
+			if (files[i].isFile()) {
+				flag = DeleteFile(files[i].getAbsolutePath());
+				if (!flag)
+					break;
+			}
+			else {
+				flag = DeleteDirectory(files[i].getAbsolutePath());
+				if (!flag)
+					break;
+			}
+		}
+		if (!flag)
+			return false;
+		if (dirFile.delete()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 }
