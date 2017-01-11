@@ -30,27 +30,23 @@ public class ConcatMain {
 	public ConcatMain(String[] args) {
 		for (int i = 0; i < args.length; i++) {
 			String one_arg = args[i].trim();
-			boolean java7 = false;
-			boolean java8 = false;
+//			boolean java7 = false;
+//			boolean java8 = false;
 			if (one_arg.startsWith("-Djava")) {
 				if (one_arg.startsWith("-Djava7")) {
-					java7 = true;
+//					java7 = true;
 					Java7_Home = one_arg.substring("-Djava7=".length()).replace('\\', '/');
 				}
 				if (one_arg.startsWith("-Djava8")) {
-					java8 = true;
+//					java8 = true;
 					Java8_Home = one_arg.substring("-Djava8=".length()).replace('\\', '/');
 				}
-				if (!java7 && !java8) {
-					System.err.println(
-							"Error! we need only both java7 path and java8 path set through -Djava7= or -Djava8=.");
-				}
-				if (!java7) {
-					Java7_Home = System.getenv("JAVA_HOME").replace('\\', '/');
-				}
-				if (!java8) {
-					Java8_Home = System.getenv("JAVA_HOME").replace('\\', '/');
-				}
+//				if (!java7) {
+//					Java7_Home = System.getenv("JAVA_HOME").replace('\\', '/');
+//				}
+//				if (!java8) {
+//					Java8_Home = System.getenv("JAVA_HOME").replace('\\', '/');
+//				}
 			} else if (one_arg.startsWith("-Dtask")) {
 				task_type = one_arg.substring("-Dtask=".length());
 			} else {
@@ -60,8 +56,14 @@ public class ConcatMain {
 		if (Task_type() == null) {
 			task_type = "race-analysis";
 		}
-		assert Java7_Home != null;
-		assert Java8_Home != null;
+		if (Java7_Home == null && Java8_Home != null) {
+			Java7_Home = System.getenv("JAVA_HOME").replace('\\', '/');
+		} else if (Java7_Home != null && Java8_Home == null) {
+			Java8_Home = System.getenv("JAVA_HOME").replace('\\', '/');
+		} else if (Java7_Home == null && Java8_Home == null) {
+			System.err.println(
+					"Error! we need only both java7 path and java8 path set through -Djava7= or -Djava8=.");
+		}
 	}
 
 	public String[] GetRefinedArgs() {
