@@ -38,7 +38,7 @@ public class ConcatMain {
 				if (one_arg.startsWith("-Djava8")) {
 					Java8_Home = one_arg.substring("-Djava8=".length()).replace('\\', '/');
 				}
-			} else if (one_arg.startsWith("-Dtask")) {
+			} else if (one_arg.startsWith("-Dtask=")) {
 				task_type = one_arg.substring("-Dtask=".length());
 			} else {
 				refined_args.add(one_arg);
@@ -58,6 +58,8 @@ public class ConcatMain {
 	}
 
 	public String[] GetRefinedArgs() {
+		// TODO
+		System.out.println(refined_args);
 		String[] rarr = new String[refined_args.size()];
 		rarr = refined_args.toArray(rarr);
 		return rarr;
@@ -98,12 +100,12 @@ public class ConcatMain {
 
 	public static void main(String[] args) {
 		ConcatMain cm = new ConcatMain(args);
-		args = cm.GetRefinedArgs();
+		String[] ref_args = cm.GetRefinedArgs();
 		String task_type = cm.Task_type();
 
 		StringBuffer sb = new StringBuffer();
-		for (int i = 0; i < args.length; i++) {
-			sb.append(" " + args[i]);
+		for (int i = 0; i < ref_args.length; i++) {
+			sb.append(" " + ref_args[i]);
 		}
 		String cmd = "java -jar evosuite-master-1.0.4-SNAPSHOT.jar -Dassertions=false" + sb.toString();
 		cm.RunOneProcess(cmd.split(" "), true, new DisplayInfo(System.out), new DisplayInfo(System.err));
@@ -120,7 +122,7 @@ public class ConcatMain {
 			FileUtil.DeleteFolder(classes.getAbsolutePath());
 		}
 		classes.mkdir();
-		String projectcp = CommandUtil.FindProjectClassPath(args);
+		String projectcp = CommandUtil.FindProjectClassPath(ref_args);
 		String pathsep = System.getProperty("path.separator");
 		String classpath = "." + (projectcp == null ? "" : (pathsep + projectcp)) + pathsep
 				+ "evosuite-standalone-runtime-1.0.4-SNAPSHOT";
