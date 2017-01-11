@@ -131,7 +131,7 @@ public class ConcatMain {
 		String pathsep = System.getProperty("path.separator");
 		String classpath = "." + (projectcp == null ? "" : (pathsep + projectcp)) + pathsep
 				+ "evosuite-standalone-runtime-1.0.4-SNAPSHOT";
-		FileIterator fi1 = new FileIterator(Slicer.consuitedir, "\\.java$");
+		FileIterator fi1 = new FileIterator(Slicer.consuitedir, ".+(\\.java)$");
 		Iterator<File> fitr1 = fi1.EachFileIterator();
 		while (fitr1.hasNext()) {
 			File f = fitr1.next();
@@ -146,7 +146,7 @@ public class ConcatMain {
 		
 		classpath += (pathsep + "calfuzzer.jar" + pathsep + Compiled_Classpath);
 		String parent_path = new File("haha").getAbsolutePath().replace('\\', '/') + "/" + Compiled_Classpath + "/";
-		FileIterator fi2 = new FileIterator(Compiled_Classpath, "TestCase([0-9]+)\\.class$");
+		FileIterator fi2 = new FileIterator(Compiled_Classpath, "TestCase([0-9]+)(\\.class)$");
 		Iterator<File> fitr2 = fi2.EachFileIterator();
 		while (fitr2.hasNext()) {
 			File f = fitr2.next();
