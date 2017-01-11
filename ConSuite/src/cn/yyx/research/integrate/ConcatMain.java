@@ -121,7 +121,7 @@ public class ConcatMain {
 
 		File classes = new File(Compiled_Classpath);
 		if (classes.exists()) {
-			classes.delete();
+			FileUtil.DeleteFolder(classes.getAbsolutePath());
 		}
 		classes.mkdir();
 		String projectcp = CommandUtil.FindProjectClassPath(args);
@@ -168,7 +168,7 @@ public class ConcatMain {
 			cm.RunOneProcess(cmd.split(" "), false, new DisplayInfo(System.out), new DisplayInfo(System.err));
 		}
 		if (classes.exists()) {
-			classes.delete();
+			FileUtil.DeleteFolder(classes.getAbsolutePath());
 		}
 	}
 
