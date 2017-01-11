@@ -16,8 +16,10 @@ import cn.yyx.research.util.SystemStreamUtil;
 
 public class ConcatMain {
 	
-	private String Java7_Home;
-	private String Java8_Home;
+	private String Java7_Home = null;
+	private String Java8_Home = null;
+	
+	private String task_type = null;
 	
 	public static final String Compiled_Classpath = "classes";
 	
@@ -26,28 +28,40 @@ public class ConcatMain {
 	public ConcatMain(String[] args) {
 		for (int i=0;i<args.length;i++)
 		{
-			String one_arg = args[i];
+			String one_arg = args[i].trim();
 			boolean java7 = false;
 			boolean java8 = false;
 			if (one_arg.startsWith("-Djava")) {
 				if (one_arg.startsWith("-Djava7")) {
 					java7 = true;
-					Java7_Home = one_arg.substring("-Djava7=".length());
+					Java7_Home = one_arg.substring("-Djava7=".length()).replace('\\', '/');
 				}
 				if (one_arg.startsWith("-Djava8")) {
 					java8 = true;
-					Java8_Home = one_arg.substring("-Djava8=".length());
+					Java8_Home = one_arg.substring("-Djava8=".length()).replace('\\', '/');
+				}
+				if (!java7 && !java8)
+				{
+					System.err.println("Error! we need only both java7 path and java8 path set through -Djava7= or -Djava8=.");
 				}
 				if (!java7) {
-					Java7_Home = null;
+					Java7_Home = System.getenv("JAVA_HOME").replace('\\', '/');
 				}
 				if (!java8) {
-					Java8_Home = null;
+					Java8_Home = System.getenv("JAVA_HOME").replace('\\', '/');
 				}
+			} else if (one_arg.startsWith("-Dtask")) {
+				task_type = one_arg.substring("-Dtask=".length());
 			} else {
 				refined_args.add(one_arg);
 			}
 		}
+		if (Task_type() == null)
+		{
+			task_type = "detect_race";
+		}
+		assert Java7_Home != null;
+		assert Java8_Home != null;
 	}
 	
 	public String[] GetRefinedArgs()
@@ -94,6 +108,7 @@ public class ConcatMain {
 	public static void main(String[] args) {
 		ConcatMain cm = new ConcatMain(args);
 		args = cm.GetRefinedArgs();
+		String task_type = cm.Task_type();
 
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < args.length; i++) {
@@ -135,7 +150,7 @@ public class ConcatMain {
 			String f_abosulate_path = f.getAbsolutePath().replace('\\', '/');
 			String temp_full_name = f_abosulate_path.substring(parent_path.length());
 			String full_name = temp_full_name.substring(0, temp_full_name.length()-".class".length()).replace('/', '.');
-			cmd = "ant -f run.xml detect_race -Dtest_class=" + full_name + "-Dclass_path=" + classpath;
+			cmd = "ant -f run.xml " + task_type + " -Dtest_class=" + full_name + "-Dclass_path=" + classpath;
 			
 			DisplayInfoAndConsumeCalfuzzerResult out = new DisplayInfoAndConsumeCalfuzzerResult(System.out);
 			DisplayInfoAndConsumeCalfuzzerResult err = new DisplayInfoAndConsumeCalfuzzerResult(System.err);
@@ -146,13 +161,17 @@ public class ConcatMain {
 			result.addAll(err.GetRaces());
 			result.add(System.getProperty("line.separator"));
 			
-			FileUtil.AppendToFile("result.1k", result);
+			FileUtil.AppendToFile("calfuzzer_result.1k", result);
 			
-			System.out.println("Successfully detect the race in:" + full_name + ".");
+			System.out.println("Successfully " + task_type + " in:" + full_name + ".");
 			
 			cmd = "ant -f run.xml clean";
 			cm.RunOneProcess(cmd.split(" "), false, new DisplayInfo(System.out), new DisplayInfo(System.err));
 		}
 	}
 
+	public String Task_type() {
+		return task_type;
+	}
+	
 }

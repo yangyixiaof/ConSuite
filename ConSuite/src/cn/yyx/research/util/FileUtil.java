@@ -21,7 +21,7 @@ public class FileUtil {
 			}
 		}
 		try {
-			BufferedWriter bw = new BufferedWriter(new FileWriter(f));
+			BufferedWriter bw = new BufferedWriter(new FileWriter(f, true));
 			Iterator<String> itr = contents.iterator();
 			while (itr.hasNext())
 			{
