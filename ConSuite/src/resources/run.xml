@@ -255,9 +255,14 @@
         <antcall target="analysis-once">
             <param name="javato.activetesting.analysis.class" value="javato.activetesting.HybridAnalysis"/>
         </antcall>
-        <antcall target="active-loop">
-            <param name="javato.activetesting.analysis.class" value="javato.activetesting.RaceFuzzerAnalysis"/>
-        </antcall>
+		<if>
+            <isset property="do_fuzzer"/>
+            <then>
+				<antcall target="active-loop">
+					<param name="javato.activetesting.analysis.class" value="javato.activetesting.RaceFuzzerAnalysis"/>
+				</antcall>
+			</then>
+		</if>
     </target>
 
     <target name="atomfuzzer-analysis" description="Run hybrid lock related atomicity violation detector and ATOMfuzzer with 3 trials per potential error">
@@ -271,9 +276,14 @@
         <antcall target="analysis-once">
             <param name="javato.activetesting.analysis.class" value="javato.activetesting.PAtomicityAnalysis"/>
         </antcall>
-        <antcall target="active-loop">
-            <param name="javato.activetesting.analysis.class" value="javato.activetesting.RaceFuzzerAnalysis"/>
-        </antcall>
+		<if>
+            <isset property="do_fuzzer"/>
+            <then>
+				<antcall target="active-loop">
+					<param name="javato.activetesting.analysis.class" value="javato.activetesting.RaceFuzzerAnalysis"/>
+				</antcall>
+		    </then>
+		</if>
     </target>
 
     <target name="predictest-analysis" description="Run deterministic hybrid race (both lock and data) detector and predictest with 2 trials per potential error">
@@ -297,9 +307,14 @@
                 <antcall target="analysis-once">
                     <param name="javato.activetesting.analysis.class" value="javato.activetesting.HybridAnalysis"/>
                 </antcall>
-                <antcall target="predictest-loop">
-                    <param name="javato.activetesting.analysis.class" value="javato.activetesting.PredictestAnalysis"/>
-                </antcall>
+				<if>
+					<isset property="do_fuzzer"/>
+					<then>
+						<antcall target="predictest-loop">
+							<param name="javato.activetesting.analysis.class" value="javato.activetesting.PredictestAnalysis"/>
+						</antcall>
+					</then>
+				</if>
             </else>
         </if>
     </target>
@@ -314,9 +329,14 @@
         <antcall target="analysis-once">
             <param name="javato.activetesting.analysis.class" value="javato.activetesting.IGoodlockAnalysis"/>
         </antcall>
-        <antcall target="active-loop">
-            <param name="javato.activetesting.analysis.class" value="javato.activetesting.DeadlockFuzzerAnalysis"/>
-        </antcall>
+		<if>
+            <isset property="do_fuzzer"/>
+            <then>
+				<antcall target="active-loop">
+					<param name="javato.activetesting.analysis.class" value="javato.activetesting.DeadlockFuzzerAnalysis"/>
+				</antcall>
+			</then>
+		</if>
     </target>
 
     <target name="calfuzzer_run">
