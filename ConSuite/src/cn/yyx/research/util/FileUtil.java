@@ -50,8 +50,9 @@ public class FileUtil {
 			out = new BufferedOutputStream(new FileOutputStream(dst));
 
 			byte[] b = new byte[1024];
-			while (in.read(b) != -1) {
-				out.write(b);
+			int num_bytes = 0;
+			while ((num_bytes = in.read(b)) >= 0) {
+				out.write(b, 0, num_bytes);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
