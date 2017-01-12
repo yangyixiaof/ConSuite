@@ -13,6 +13,7 @@ import cn.yyx.research.util.CommandUtil;
 import cn.yyx.research.util.EnvironmentUtil;
 import cn.yyx.research.util.FileIterator;
 import cn.yyx.research.util.FileUtil;
+import cn.yyx.research.util.ResourceUtil;
 import cn.yyx.research.util.SystemStreamUtil;
 
 public class ConcatMain {
@@ -29,6 +30,8 @@ public class ConcatMain {
 	private ArrayList<String> refined_args = new ArrayList<String>();
 
 	public ConcatMain(String[] args) {
+		ResourceUtil.InitialEnvironment();
+		
 //		for (String arg : args)
 //		{
 //			System.err.println("arg:" + arg);
@@ -59,7 +62,10 @@ public class ConcatMain {
 		} else if (Java7_Home == null && Java8_Home == null) {
 			System.err.println(
 					"Error! we need only both java7 path and java8 path set through -Djava7= or -Djava8=.");
+			System.exit(1);
 		}
+		
+		ResourceUtil.ClearEnvironment();
 	}
 
 	public String[] GetRefinedArgs() {
