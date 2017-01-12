@@ -67,6 +67,7 @@ public class FileUtil {
 			if (out != null)
 			{
 				try {
+					out.flush();
 					out.close();
 				} catch (IOException e) {
 					e.printStackTrace();

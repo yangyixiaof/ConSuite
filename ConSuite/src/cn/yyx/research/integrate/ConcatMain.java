@@ -30,8 +30,6 @@ public class ConcatMain {
 	private ArrayList<String> refined_args = new ArrayList<String>();
 
 	public ConcatMain(String[] args) {
-		ResourceUtil.InitialEnvironment();
-		
 //		for (String arg : args)
 //		{
 //			System.err.println("arg:" + arg);
@@ -64,8 +62,6 @@ public class ConcatMain {
 					"Error! we need only both java7 path and java8 path set through -Djava7= or -Djava8=.");
 			System.exit(1);
 		}
-		
-		ResourceUtil.ClearEnvironment();
 	}
 
 	public String[] GetRefinedArgs() {
@@ -108,6 +104,8 @@ public class ConcatMain {
 	}
 
 	public static void main(String[] args) {
+		ResourceUtil.InitialEnvironment();
+		
 		ConcatMain cm = new ConcatMain(args);
 		String[] ref_args = cm.GetRefinedArgs();
 		String task_type = cm.Task_type();
@@ -189,6 +187,8 @@ public class ConcatMain {
 		if (classes.exists()) {
 			FileUtil.DeleteFolder(classes.getAbsolutePath());
 		}
+		
+		ResourceUtil.ClearEnvironment();
 	}
 
 	public String Task_type() {
