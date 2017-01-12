@@ -21,7 +21,10 @@ public class DisplayInfoAndConsumeCalfuzzerResult extends DisplayInfo {
 	public void HandleInformation(String oneline) {
 		if (start_recore)
 		{
-			race_list.add(oneline);
+			oneline = oneline.trim();
+			if (oneline.startsWith("[java] Data race between") || oneline.startsWith("[java] Lock race between")) {
+				race_list.add(oneline);
+			}
 		}
 		if (oneline.equals("analysis-once:"))
 		{
