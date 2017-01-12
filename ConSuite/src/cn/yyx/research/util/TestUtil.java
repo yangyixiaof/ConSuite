@@ -22,15 +22,9 @@ public class TestUtil {
 //		FileUtil.AppendToFile(heihei.getAbsolutePath(), res);
 		
 		try {
-			File file = new File("D:/ddd.ddd");
-			file.delete();
-			file.createNewFile();
-			String sets = "attrib +H \"" + file.getAbsolutePath() + "\"";
-			System.out.println(sets);
-			Runtime.getRuntime().exec(sets);
 			String str = "add your string content";
 			InputStream inputStream = new ByteArrayInputStream(str.getBytes());
-			FileUtil.ReadFromStreamAndWriteToFile(inputStream, file.getAbsolutePath());
+			FileUtil.ReadFromStreamAndWriteToFile(inputStream, "D:/ddd.ddd");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

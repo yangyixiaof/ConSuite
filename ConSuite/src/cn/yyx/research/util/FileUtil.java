@@ -44,15 +44,15 @@ public class FileUtil {
 			if (dst.exists())
 			{
 				dst.delete();
-				dst.createNewFile();
-				if (EnvironmentUtil.IsWindows())
-				{
-					try {
-						String scmd = "attrib +H \"" + dst.getAbsolutePath() + "\"";
-						Runtime.getRuntime().exec(scmd);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+			}
+			dst.createNewFile();
+			if (EnvironmentUtil.IsWindows())
+			{
+				try {
+					String scmd = "attrib +H \"" + dst.getAbsolutePath() + "\"";
+					Runtime.getRuntime().exec(scmd);
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
 			in = new BufferedInputStream(is);
