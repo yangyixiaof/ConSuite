@@ -2,7 +2,7 @@
 <project name="javato" default="usage">
     <taskdef resource="net/sf/antcontrib/antlib.xml">
         <classpath>
-            <pathelement location="calfuzzer.jar"/>
+            <pathelement location=".calfuzzer.jar"/>
         </classpath>
     </taskdef>
     <property name="javato.home.dir" location="."/>
