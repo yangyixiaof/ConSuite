@@ -1,6 +1,10 @@
 package cn.yyx.research.util;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.InputStream;
+import java.util.LinkedList;
+import java.util.List;
 
 public class TestUtil {
 	
@@ -12,6 +16,16 @@ public class TestUtil {
 		System.out.println("TestCase12.class".matches(".+(TestCase([0-9]+)\\.class)$"));
 		System.out.println("TestCase12$2.class".matches(".+(TestCase([0-9]+)\\.class)$"));
 		System.out.println("HaHaTestCase12.class".matches(".+(TestCase([0-9]+)\\.class)$"));
+		
+		File heihei = new File(".kj");
+		List<String> res = new LinkedList<String>();
+		res.add("iu");
+		res.add("op");
+		FileUtil.AppendToFile(heihei.getAbsolutePath(), res);
+		
+		String str = "add   your   string   content";
+		InputStream inputStream = new ByteArrayInputStream(str.getBytes());
+		FileUtil.ReadFromStreamAndWriteToFile(inputStream, ".pk.jar");
 	}
 	
 }
