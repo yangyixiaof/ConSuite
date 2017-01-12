@@ -5,38 +5,43 @@ import java.io.InputStream;
 
 public class ResourceUtil {
 	
+	public static final String Evosuite_Master = ".evosuite-master-1.0.4-SNAPSHOT.jar";
+	public static final String Calfuzzer = ".calfuzzer.jar";
+	public static final String Evosuite_Runtime = ".evosuite-standalone-runtime-1.0.4-SNAPSHOT.jar";
+	public static final String Ant_Run = ".run.xml";
+	
 	public static void InitialEnvironment()
 	{
 		InputStream is = null;
-		is = ResourceUtil.class.getResourceAsStream("/resources/evosuite-master-1.0.4-SNAPSHOT.jar");
-		FileUtil.ReadFromStreamAndWriteToFile(is, "evosuite-master-1.0.4-SNAPSHOT.jar");
-		is = ResourceUtil.class.getResourceAsStream("/resources/calfuzzer.jar");
-		FileUtil.ReadFromStreamAndWriteToFile(is, "calfuzzer.jar");
-		is = ResourceUtil.class.getResourceAsStream("/resources/evosuite-standalone-runtime-1.0.4-SNAPSHOT.jar");
-		FileUtil.ReadFromStreamAndWriteToFile(is, "evosuite-standalone-runtime-1.0.4-SNAPSHOT.jar");
-		is = ResourceUtil.class.getResourceAsStream("/resources/run.xml");
-		FileUtil.ReadFromStreamAndWriteToFile(is, "run.xml");
+		is = ResourceUtil.class.getResourceAsStream("/resources/" + Evosuite_Master);
+		FileUtil.ReadFromStreamAndWriteToFile(is, Evosuite_Master);
+		is = ResourceUtil.class.getResourceAsStream("/resources/" + Calfuzzer);
+		FileUtil.ReadFromStreamAndWriteToFile(is, Calfuzzer);
+		is = ResourceUtil.class.getResourceAsStream("/resources/" + Evosuite_Runtime);
+		FileUtil.ReadFromStreamAndWriteToFile(is, Evosuite_Runtime);
+		is = ResourceUtil.class.getResourceAsStream("/resources/" + Ant_Run);
+		FileUtil.ReadFromStreamAndWriteToFile(is, Ant_Run);
 	}
 	
 	public static void ClearEnvironment()
 	{
 		File f = null;
-		f = new File("evosuite-master-1.0.4-SNAPSHOT.jar");
+		f = new File(Evosuite_Master);
 		if (f != null && f.exists())
 		{
 			f.delete();
 		}
-		f = new File("calfuzzer.jar");
+		f = new File(Calfuzzer);
 		if (f != null && f.exists())
 		{
 			f.delete();
 		}
-		f = new File("evosuite-standalone-runtime-1.0.4-SNAPSHOT.jar");
+		f = new File(Evosuite_Runtime);
 		if (f != null && f.exists())
 		{
 			f.delete();
 		}
-		f = new File("run.xml");
+		f = new File(Ant_Run);
 		if (f != null && f.exists())
 		{
 			f.delete();

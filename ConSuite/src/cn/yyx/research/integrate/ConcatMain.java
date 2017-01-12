@@ -114,7 +114,7 @@ public class ConcatMain {
 		for (int i = 0; i < ref_args.length; i++) {
 			sb.append(" " + ref_args[i]);
 		}
-		String cmd = "java -jar evosuite-master-1.0.4-SNAPSHOT.jar -Dassertions=false" + sb.toString();
+		String cmd = "java -jar " + ResourceUtil.Evosuite_Master + " -Dassertions=false" + sb.toString();
 		cm.RunOneProcess(cmd.split(" "), true, new DisplayInfo(System.out), new DisplayInfo(System.err));
 
 		Slicer s = new Slicer("evosuite-tests");
@@ -132,7 +132,7 @@ public class ConcatMain {
 		String projectcp = CommandUtil.FindProjectClassPath(ref_args);
 		String pathsep = System.getProperty("path.separator");
 		String classpath = "." + (projectcp == null ? "" : (pathsep + projectcp)) + pathsep
-				+ "evosuite-standalone-runtime-1.0.4-SNAPSHOT.jar";
+				+ ResourceUtil.Evosuite_Runtime;
 		FileIterator fi1 = new FileIterator(Slicer.consuitedir, ".+(\\.java)$");
 		Iterator<File> fitr1 = fi1.EachFileIterator();
 		while (fitr1.hasNext()) {
@@ -152,7 +152,7 @@ public class ConcatMain {
 			ant_cmd = "ant.bat";
 		}
 		
-		classpath += (pathsep + "calfuzzer.jar" + pathsep + Compiled_Classpath);
+		classpath += (pathsep + ResourceUtil.Calfuzzer + pathsep + Compiled_Classpath);
 		String classpath_ant = classpath.replace(';', ':');
 		
 		String parent_path = new File(Compiled_Classpath).getAbsolutePath().replace('\\', '/') + "/";
@@ -165,7 +165,7 @@ public class ConcatMain {
 			String full_name = temp_full_name.substring(0, temp_full_name.length() - ".class".length()).replace('/',
 					'.');
 			
-			cmd = ant_cmd + " -f run.xml calfuzzer_run -Dtest_class=" + full_name + " -Dtask_type=" + task_type
+			cmd = ant_cmd + " -f " + ResourceUtil.Ant_Run + " calfuzzer_run -Dtest_class=" + full_name + " -Dtask_type=" + task_type
 					+ " -Dclass_path=" + classpath_ant;
 
 			DisplayInfoAndConsumeCalfuzzerResult out = new DisplayInfoAndConsumeCalfuzzerResult(System.out);
@@ -182,7 +182,7 @@ public class ConcatMain {
 			System.out.println("Successfully " + task_type + " in:" + full_name + ".");
 		}
 		SystemStreamUtil.Flush();
-		cmd = ant_cmd + " -f run.xml clean_here";
+		cmd = ant_cmd + " -f " + ResourceUtil.Ant_Run + " clean_here";
 		cm.RunOneProcess(cmd.split(" "), false, new DisplayInfo(System.out), new DisplayInfo(System.err));
 		if (classes.exists()) {
 			FileUtil.DeleteFolder(classes.getAbsolutePath());
