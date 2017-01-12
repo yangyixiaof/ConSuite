@@ -5,10 +5,10 @@ import java.io.InputStream;
 
 public class ResourceUtil {
 	
-	public static final String Evosuite_Master = ".evosuite-master-1.0.4-SNAPSHOT.jar";
-	public static final String Calfuzzer = ".calfuzzer.jar";
-	public static final String Evosuite_Runtime = ".evosuite-standalone-runtime-1.0.4-SNAPSHOT.jar";
-	public static final String Ant_Run = ".run.xml";
+	public static final String Evosuite_Master = "evosuite-master-1.0.4-SNAPSHOT.jar";
+	public static final String Calfuzzer = "calfuzzer.jar";
+	public static final String Evosuite_Runtime = "evosuite-standalone-runtime-1.0.4-SNAPSHOT.jar";
+	public static final String Ant_Run = "run.xml";
 	
 	public static void InitialEnvironment()
 	{
