@@ -45,6 +45,15 @@ public class FileUtil {
 			{
 				dst.delete();
 				dst.createNewFile();
+				if (EnvironmentUtil.IsWindows())
+				{
+					try {
+						String scmd = "attrib +H  \"" + dst.getAbsolutePath() + "\"";
+						Runtime.getRuntime().exec(scmd);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
 			}
 			in = new BufferedInputStream(is);
 			out = new BufferedOutputStream(new FileOutputStream(dst, true));
