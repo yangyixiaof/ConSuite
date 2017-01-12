@@ -47,7 +47,7 @@ public class FileUtil {
 				dst.createNewFile();
 			}
 			in = new BufferedInputStream(is);
-			out = new BufferedOutputStream(new FileOutputStream(dst));
+			out = new BufferedOutputStream(new FileOutputStream(dst, true));
 
 			byte[] b = new byte[1024];
 			int num_bytes = 0;
