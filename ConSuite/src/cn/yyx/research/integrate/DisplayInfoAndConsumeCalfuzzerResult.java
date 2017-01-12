@@ -22,7 +22,7 @@ public class DisplayInfoAndConsumeCalfuzzerResult extends DisplayInfo {
 		if (start_recore)
 		{
 			oneline = oneline.trim();
-			if (oneline.startsWith("[java] Data race between") || oneline.startsWith("[java] Lock race between")) {
+			if ((oneline.startsWith("[java] Data race between") && (!oneline.startsWith("[java] Data race between sum: "))) || (oneline.startsWith("[java] Lock race between") && (!oneline.startsWith("[java] Lock race between sum: ")))) {
 				race_list.add(oneline);
 			}
 		}
