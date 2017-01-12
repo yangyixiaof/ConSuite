@@ -48,7 +48,7 @@ public class FileUtil {
 				if (EnvironmentUtil.IsWindows())
 				{
 					try {
-						String scmd = "attrib +H  \"" + dst.getAbsolutePath() + "\"";
+						String scmd = "attrib +H \"" + dst.getAbsolutePath() + "\"";
 						Runtime.getRuntime().exec(scmd);
 					} catch (Exception e) {
 						e.printStackTrace();
