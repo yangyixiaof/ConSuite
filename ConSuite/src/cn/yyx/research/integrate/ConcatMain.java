@@ -50,7 +50,7 @@ public class ConcatMain {
 				refined_args.add(one_arg);
 			}
 		}
-		if (Task_type() == null) {
+		if (task_type == null) {
 			task_type = "race-analysis";
 		}
 		if (Java7_Home == null && Java8_Home != null) {
