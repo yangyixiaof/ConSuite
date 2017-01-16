@@ -192,11 +192,11 @@ public class ConcatMain {
 			FillResultMap(err_result, result_count);
 			FillFinalResultMap(final_result_count, result_count);
 			
-			List<String> test_list = new LinkedList<String>();
-			test_list.add("============== " + "Detect race in " + full_name + " ==============");
-			test_list.addAll(out_result);
-			test_list.addAll(err_result);
-			FileUtil.AppendToFile("compare_result.1k", test_list);
+//			List<String> test_list = new LinkedList<String>();
+//			test_list.add("============== " + "Detect race in " + full_name + " ==============");
+//			test_list.addAll(out_result);
+//			test_list.addAll(err_result);
+//			FileUtil.AppendToFile("compare_result.1k", test_list);
 			
 			System.out.println("Successfully " + task_type + " in:" + full_name + ".");
 		}
