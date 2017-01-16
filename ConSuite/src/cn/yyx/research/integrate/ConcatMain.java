@@ -127,6 +127,7 @@ public class ConcatMain {
 			if (!use8 && Java7_Home != null) {
 				map.put("JAVA_HOME", Java7_Home);
 			}
+			System.out.println("JAVA_HOME:" + map.get("JAVA_HOME"));
 
 			Process process = pb.start();
 			InputStream is = process.getInputStream();
