@@ -187,6 +187,9 @@ public class ConcatMain {
 			cmd = "javac -version";
 			cm.RunOneProcess(cmd.split(" "), false, new DisplayInfo(System.out), new DisplayInfo(System.err));
 			
+			cmd = "java -version";
+			cm.RunOneProcess(cmd.split(" "), false, new DisplayInfo(System.out), new DisplayInfo(System.err));
+			
 			cmd = "javac " + f.getAbsolutePath() + " -d classes -cp " + classpath;
 			cm.RunOneProcess(cmd.split(" "), false, new DisplayInfo(System.out), new DisplayInfo(System.err));
 			System.out.println("Successfully compile the java file:" + f.getAbsolutePath() + ".");
