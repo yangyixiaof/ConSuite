@@ -22,7 +22,11 @@ public class DisplayInfoAndConsumeCalfuzzerResult extends DisplayInfo {
 		if (start_recore)
 		{
 			oneline = oneline.trim();
-			if ((oneline.startsWith("[java] Data race between") && (!oneline.startsWith("[java] Data race between sum: "))) || (oneline.startsWith("[java] Lock race between") && (!oneline.startsWith("[java] Lock race between sum: ")))) {
+			int idx = oneline.indexOf("	at ");
+			if (idx >= 0) {
+				oneline = oneline.substring(0, idx);
+			}
+			if ((oneline != null && !oneline.equals("")) && ((oneline.startsWith("[java] Data race between") && (!oneline.startsWith("[java] Data race between loop")) && (!oneline.startsWith("[java] Data race between sum: "))) || (oneline.startsWith("[java] Lock race between") && (!oneline.startsWith("[java] Lock race between loop")) && (!oneline.startsWith("[java] Lock race between sum: "))))) {
 				race_list.add(oneline);
 			}
 		}

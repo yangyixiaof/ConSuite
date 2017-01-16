@@ -158,7 +158,7 @@ public class ConcatMain {
 		String classpath_ant = classpath.replace(';', ':');
 		
 		String one_class = null;
-		Map<String, Integer> result_count = new TreeMap<String, Integer>();
+		Map<String, Integer> final_result_count = new TreeMap<String, Integer>();
 		String parent_path = new File(Compiled_Classpath).getAbsolutePath().replace('\\', '/') + "/";
 		FileIterator fi2 = new FileIterator(Compiled_Classpath, ".+(TestCase([0-9]+)\\.class)$");
 		Iterator<File> fitr2 = fi2.EachFileIterator();
@@ -175,7 +175,7 @@ public class ConcatMain {
 			} else {
 				if (!one_class.equals(temp_one_class))
 				{
-					PrintResultMap(result_count, one_class);
+					PrintResultMap(final_result_count, one_class);
 				}
 			}
 			
@@ -187,8 +187,10 @@ public class ConcatMain {
 			cm.RunOneProcess(cmd.split(" "), false, out, err);
 			ArrayList<String> out_result = out.GetRaces();
 			ArrayList<String> err_result = err.GetRaces();
+			Map<String, Integer> result_count = new TreeMap<String, Integer>();
 			FillResultMap(out_result, result_count);
 			FillResultMap(err_result, result_count);
+			FillFinalResultMap(final_result_count, result_count);
 			
 			List<String> test_list = new LinkedList<String>();
 			test_list.add("============== " + "Detect race in " + full_name + " ==============");
@@ -198,14 +200,14 @@ public class ConcatMain {
 			
 			System.out.println("Successfully " + task_type + " in:" + full_name + ".");
 		}
-		if (!result_count.isEmpty())
+		if (!final_result_count.isEmpty())
 		{
 			if (one_class == null)
 			{
 				System.err.println("What the fuck! one_class is null and result_count is not null?");
 				System.exit(1);
 			}
-			PrintResultMap(result_count, one_class);
+			PrintResultMap(final_result_count, one_class);
 		}
 		SystemStreamUtil.Flush();
 		cmd = ant_cmd + " -f " + ResourceUtil.Ant_Run + " clean_here";
@@ -236,6 +238,31 @@ public class ConcatMain {
 		FileUtil.AppendToFile("calfuzzer_result.1k", result);
 		result_count.clear();
 		result.clear();
+	}
+	
+	private static void FillFinalResultMap(Map<String, Integer> final_result_count, Map<String, Integer> result_count)
+	{
+		if (final_result_count.isEmpty()) {
+			final_result_count.putAll(result_count);
+		} else {
+			Set<String> rkeys = result_count.keySet();
+			Iterator<String> ritr = rkeys.iterator();
+			while (ritr.hasNext())
+			{
+				String key = ritr.next();
+				int count = result_count.get(key);
+				Integer final_count = final_result_count.get(key);
+				if (final_count == null) {
+					final_count = count;
+				} else {
+					if (final_count < count)
+					{
+						final_count = count;
+					}
+				}
+				final_result_count.put(key, final_count);
+			}
+		}
 	}
 	
 	private static void FillResultMap(List<String> result, Map<String, Integer> result_count)
