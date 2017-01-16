@@ -114,23 +114,32 @@ public class ConcatMain {
 		return rarr;
 	}
 
-	public void RunOneProcess(String[] cmd, boolean use8, DisplayInfo out, DisplayInfo err) {
+	public void RunOneProcess(String cmd, boolean use8, DisplayInfo out, DisplayInfo err) {
 		try {
-			ProcessBuilder pb = new ProcessBuilder(cmd); // "java", "-jar",
+			List<String> commands = new LinkedList<String>();
+			if (EnvironmentUtil.IsWindows()) {
+				commands.add("cmd");
+				commands.add("/c");
+				String[] cmds = cmd.split(" ");
+				for (int i=0;i<cmds.length;i++) {
+					commands.add(cmds[i]);
+				}
+			} else {
+				commands.add("sh");
+				commands.add("-c");
+				commands.add(cmd);
+			}
+			ProcessBuilder pb = new ProcessBuilder(commands); // "java", "-jar",
 															// "Test3.jar"
 			// pb.directory(new File("F:\\dist"));
 			Map<String, String> map = pb.environment();
-
+			
 			if ((use8 && Java8_Home != null)) {
-				map.put("JAVA_HOME", Java8_Home);
+				EnvironmentUtil.HandleProcessEnvironment(map, Java8_Home);
 			}
 			if (!use8 && Java7_Home != null) {
-				map.put("JAVA_HOME", Java7_Home);
+				EnvironmentUtil.HandleProcessEnvironment(map, Java7_Home);
 			}
-			
-			// testing.
-			System.out.println("JAVA_HOME:" + map.get("JAVA_HOME"));
-
 			Process process = pb.start();
 			InputStream is = process.getInputStream();
 			out.setIs(is);
@@ -162,7 +171,7 @@ public class ConcatMain {
 			sb.append(" " + ref_args[i]);
 		}
 		String cmd = "java -jar " + ResourceUtil.Evosuite_Master + " -Dassertions=false" + sb.toString();
-		cm.RunOneProcess(cmd.split(" "), true, new DisplayInfo(System.out), new DisplayInfo(System.err));
+		cm.RunOneProcess(cmd, true, new DisplayInfo(System.out), new DisplayInfo(System.err));
 
 		Slicer s = new Slicer("evosuite-tests");
 		s.SliceSuffixedTestInDirectory("_ESTest");
@@ -187,13 +196,13 @@ public class ConcatMain {
 			
 			// testing TODO wait to be deleted.
 			cmd = "javac -version";
-			cm.RunOneProcess(cmd.split(" "), false, new DisplayInfo(System.out), new DisplayInfo(System.err));
+			cm.RunOneProcess(cmd, false, new DisplayInfo(System.out), new DisplayInfo(System.err));
 			
 			cmd = "java -version";
-			cm.RunOneProcess(cmd.split(" "), false, new DisplayInfo(System.out), new DisplayInfo(System.err));
+			cm.RunOneProcess(cmd, false, new DisplayInfo(System.out), new DisplayInfo(System.err));
 			
 			cmd = "javac " + f.getAbsolutePath() + " -d classes -cp " + classpath;
-			cm.RunOneProcess(cmd.split(" "), false, new DisplayInfo(System.out), new DisplayInfo(System.err));
+			cm.RunOneProcess(cmd, false, new DisplayInfo(System.out), new DisplayInfo(System.err));
 			System.out.println("Successfully compile the java file:" + f.getAbsolutePath() + ".");
 		}
 		SystemStreamUtil.Flush();
@@ -237,7 +246,7 @@ public class ConcatMain {
 
 			DisplayInfoAndConsumeCalfuzzerResult out = new DisplayInfoAndConsumeCalfuzzerResult(System.out);
 			DisplayInfoAndConsumeCalfuzzerResult err = new DisplayInfoAndConsumeCalfuzzerResult(System.err);
-			cm.RunOneProcess(cmd.split(" "), false, out, err);
+			cm.RunOneProcess(cmd, false, out, err);
 			ArrayList<String> out_result = out.GetRaces();
 			ArrayList<String> err_result = err.GetRaces();
 			Map<String, Integer> result_count = new TreeMap<String, Integer>();
@@ -264,7 +273,7 @@ public class ConcatMain {
 		}
 		SystemStreamUtil.Flush();
 		cmd = ant_cmd + " -f " + ResourceUtil.Ant_Run + " clean_here";
-		cm.RunOneProcess(cmd.split(" "), false, new DisplayInfo(System.out), new DisplayInfo(System.err));
+		cm.RunOneProcess(cmd, false, new DisplayInfo(System.out), new DisplayInfo(System.err));
 		if (classes.exists()) {
 			FileUtil.DeleteFolder(classes.getAbsolutePath());
 		}

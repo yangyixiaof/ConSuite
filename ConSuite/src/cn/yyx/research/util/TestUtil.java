@@ -1,11 +1,8 @@
 package cn.yyx.research.util;
 
 import java.io.File;
-import java.io.InputStream;
 import java.lang.ProcessBuilder.Redirect;
 import java.util.Map;
-
-import cn.yyx.research.integrate.DisplayInfo;
 
 public class TestUtil {
 	
