@@ -182,6 +182,11 @@ public class ConcatMain {
 		Iterator<File> fitr1 = fi1.EachFileIterator();
 		while (fitr1.hasNext()) {
 			File f = fitr1.next();
+			
+			// testing TODO wait to be deleted.
+			cmd = "javac -version";
+			cm.RunOneProcess(cmd.split(" "), false, new DisplayInfo(System.out), new DisplayInfo(System.err));
+			
 			cmd = "javac " + f.getAbsolutePath() + " -d classes -cp " + classpath;
 			cm.RunOneProcess(cmd.split(" "), false, new DisplayInfo(System.out), new DisplayInfo(System.err));
 			System.out.println("Successfully compile the java file:" + f.getAbsolutePath() + ".");
