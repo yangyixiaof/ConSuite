@@ -194,12 +194,10 @@ public class ConcatMain {
 		while (fitr1.hasNext()) {
 			File f = fitr1.next();
 			
-			// testing TODO wait to be deleted.
-			cmd = "javac -version";
-			cm.RunOneProcess(cmd, false, new DisplayInfo(System.out), new DisplayInfo(System.err));
-			
-			cmd = "java -version";
-			cm.RunOneProcess(cmd, false, new DisplayInfo(System.out), new DisplayInfo(System.err));
+//			cmd = "javac -version";
+//			cm.RunOneProcess(cmd, false, new DisplayInfo(System.out), new DisplayInfo(System.err));
+//			cmd = "java -version";
+//			cm.RunOneProcess(cmd, false, new DisplayInfo(System.out), new DisplayInfo(System.err));
 			
 			cmd = "javac " + f.getAbsolutePath() + " -d classes -cp " + classpath;
 			cm.RunOneProcess(cmd, false, new DisplayInfo(System.out), new DisplayInfo(System.err));
