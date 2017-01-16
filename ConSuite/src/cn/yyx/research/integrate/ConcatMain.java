@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 import cn.yyx.research.slice.Slicer;
 import cn.yyx.research.util.CommandUtil;
@@ -155,6 +157,8 @@ public class ConcatMain {
 		classpath += (pathsep + ResourceUtil.Calfuzzer + pathsep + Compiled_Classpath);
 		String classpath_ant = classpath.replace(';', ':');
 		
+		String one_class = null;
+		Map<String, Integer> result_count = new TreeMap<String, Integer>();
 		String parent_path = new File(Compiled_Classpath).getAbsolutePath().replace('\\', '/') + "/";
 		FileIterator fi2 = new FileIterator(Compiled_Classpath, ".+(TestCase([0-9]+)\\.class)$");
 		Iterator<File> fitr2 = fi2.EachFileIterator();
@@ -165,21 +169,43 @@ public class ConcatMain {
 			String full_name = temp_full_name.substring(0, temp_full_name.length() - ".class".length()).replace('/',
 					'.');
 			
+			String temp_one_class = full_name.substring(0, full_name.lastIndexOf("_TestCase"));
+			if (one_class == null) {
+				one_class = temp_one_class;
+			} else {
+				if (!one_class.equals(temp_one_class))
+				{
+					PrintResultMap(result_count, one_class);
+				}
+			}
+			
 			cmd = ant_cmd + " -f " + ResourceUtil.Ant_Run + " calfuzzer_run -Dtest_class=" + full_name + " -Dtask_type=" + task_type
 					+ " -Dclass_path=" + classpath_ant;
 
 			DisplayInfoAndConsumeCalfuzzerResult out = new DisplayInfoAndConsumeCalfuzzerResult(System.out);
 			DisplayInfoAndConsumeCalfuzzerResult err = new DisplayInfoAndConsumeCalfuzzerResult(System.err);
 			cm.RunOneProcess(cmd.split(" "), false, out, err);
-			List<String> result = new LinkedList<String>();
-			result.add("========== " + full_name + " data_race" + " ==========");
-			result.addAll(out.GetRaces());
-			result.addAll(err.GetRaces());
-			result.add(System.getProperty("line.separator"));
-
-			FileUtil.AppendToFile("calfuzzer_result.1k", result);
-
+			ArrayList<String> out_result = out.GetRaces();
+			ArrayList<String> err_result = err.GetRaces();
+			FillResultMap(out_result, result_count);
+			FillResultMap(err_result, result_count);
+			
+			List<String> test_list = new LinkedList<String>();
+			test_list.add("============== " + "Detect race in " + full_name + " ==============");
+			test_list.addAll(out_result);
+			test_list.addAll(err_result);
+			FileUtil.AppendToFile("compare_result.1k", test_list);
+			
 			System.out.println("Successfully " + task_type + " in:" + full_name + ".");
+		}
+		if (!result_count.isEmpty())
+		{
+			if (one_class == null)
+			{
+				System.err.println("What the fuck! one_class is null and result_count is not null?");
+				System.exit(1);
+			}
+			PrintResultMap(result_count, one_class);
 		}
 		SystemStreamUtil.Flush();
 		cmd = ant_cmd + " -f " + ResourceUtil.Ant_Run + " clean_here";
@@ -189,6 +215,43 @@ public class ConcatMain {
 		}
 		
 		ResourceUtil.ClearEnvironment();
+	}
+	
+	private static void PrintResultMap(Map<String, Integer> result_count, String one_class)
+	{
+		List<String> result = new LinkedList<String>();
+		result.add("============== " + "Detect race in " + one_class + " ==============");
+		Set<String> rkeys = result_count.keySet();
+		Iterator<String> ritr = rkeys.iterator();
+		while (ritr.hasNext())
+		{
+			String rkey = ritr.next();
+			int count = result_count.get(rkey);
+			for (int i=0;i<count;i++)
+			{
+				result.add(rkey);
+			}
+		}
+		result.add(System.getProperty("line.separator"));
+		FileUtil.AppendToFile("calfuzzer_result.1k", result);
+		result_count.clear();
+		result.clear();
+	}
+	
+	private static void FillResultMap(List<String> result, Map<String, Integer> result_count)
+	{
+		Iterator<String> ritr = result.iterator();
+		while (ritr.hasNext())
+		{
+			String one = ritr.next();
+			Integer rs = result_count.get(one);
+			if (rs == null)
+			{
+				rs = 0;
+			}
+			rs++;
+			result_count.put(one, rs);
+		}
 	}
 
 	public String Task_type() {
