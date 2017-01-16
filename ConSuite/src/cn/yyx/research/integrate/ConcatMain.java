@@ -26,6 +26,10 @@ public class ConcatMain {
 	private String task_type = null; // {race-analysis, deadlock-analysis,
 										// atomfuzzer-analysis,
 										// predictest-analysis}
+	
+	private boolean projectCP_exists = false;
+	private int projectCP_idx = -1;
+	private String required_jars = "";
 
 	public static final String Compiled_Classpath = "classes";
 
@@ -37,6 +41,7 @@ public class ConcatMain {
 //			System.err.println("arg:" + arg);
 //		}
 //		System.exit(1);
+		String pathsep = System.getProperty("path.separator");
 		for (int i = 0; i < args.length; i++) {
 			String one_arg = args[i].trim();
 			if (one_arg.startsWith("-Djava")) {
@@ -48,7 +53,35 @@ public class ConcatMain {
 				}
 			} else if (one_arg.startsWith("-Dtask=")) {
 				task_type = one_arg.substring("-Dtask=".length());
+			} else if (one_arg.startsWith("-Djar_dir=")) {
+				String dir = one_arg.substring("-Djar_dir=".length());
+				String here = new File("here").getAbsolutePath();
+				here = here.substring(0, here.length()-"here".length());
+				String full_dir = new File(dir).getAbsolutePath();
+				boolean relative_path = false;
+				if (full_dir.startsWith(here))
+				{
+					relative_path = true;
+				}
+				FileIterator fi = new FileIterator(dir, ".*\\.jar$");
+				Iterator<File> fitr = fi.EachFileIterator();
+				while (fitr.hasNext())
+				{
+					File f = fitr.next();
+					String fpath = f.getAbsolutePath();
+					if (relative_path)
+					{
+						fpath = fpath.substring(here.length());
+					}
+					fpath = fpath.replace('\\', '/');
+					required_jars += (pathsep + fpath);
+				}
 			} else {
+				if (one_arg.startsWith("-projectCP"))
+				{
+					projectCP_exists = true;
+					projectCP_idx = refined_args.size() + 1;
+				}
 				refined_args.add(one_arg);
 			}
 		}
@@ -67,6 +100,15 @@ public class ConcatMain {
 	}
 
 	public String[] GetRefinedArgs() {
+		if (!required_jars.equals(""))
+		{
+			if (projectCP_exists) {
+				refined_args.set(projectCP_idx, refined_args.get(projectCP_idx) + required_jars);
+			} else {
+				refined_args.add("-projectCP");
+				refined_args.add(required_jars.substring(";".length()));
+			}
+		}
 		String[] rarr = new String[refined_args.size()];
 		rarr = refined_args.toArray(rarr);
 		return rarr;
@@ -285,4 +327,8 @@ public class ConcatMain {
 		return task_type;
 	}
 
+	public String GetRequiredJars() {
+		return required_jars;
+	}
+	
 }

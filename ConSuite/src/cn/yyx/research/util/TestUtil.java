@@ -1,8 +1,6 @@
 package cn.yyx.research.util;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.InputStream;
 
 public class TestUtil {
 	
@@ -21,13 +19,18 @@ public class TestUtil {
 //		res.add("op");
 //		FileUtil.AppendToFile(heihei.getAbsolutePath(), res);
 		
-		try {
-			String str = "add your string content";
-			InputStream inputStream = new ByteArrayInputStream(str.getBytes());
-			FileUtil.ReadFromStreamAndWriteToFile(inputStream, "D:/ddd.ddd");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+//		try {
+//			String str = "add your string content";
+//			InputStream inputStream = new ByteArrayInputStream(str.getBytes());
+//			FileUtil.ReadFromStreamAndWriteToFile(inputStream, "D:/ddd.ddd");
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+		
+		System.out.println(new File(".").getAbsolutePath());
+		String here = new File("here").getAbsolutePath();
+		here = here.substring(0, here.length()-"here".length());
+		System.out.println("here:"+here);
 	}
 	
 }
