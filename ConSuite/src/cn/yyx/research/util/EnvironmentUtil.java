@@ -11,10 +11,16 @@ public class EnvironmentUtil {
 	
 	public static void HandleProcessEnvironment(Map<String, String> map, String JAVA_HOME)
 	{
-		String replaced = map.get("JAVA_HOME").replace('\\', '/');
-		map.put("JAVA_HOME", map.get("JAVA_HOME").replace('\\', '/').replace(replaced, JAVA_HOME));
-		map.put("PATH", map.get("PATH").replace('\\', '/').replace(replaced, JAVA_HOME));
-		map.put("CLASSPATH", map.get("CLASSPATH").replace('\\', '/').replace(replaced, JAVA_HOME));
+		try {
+			String replaced = map.get("JAVA_HOME").replace('\\', '/');
+			map.put("JAVA_HOME", map.get("JAVA_HOME").replace('\\', '/').replace(replaced, JAVA_HOME));
+			map.put("PATH", map.get("PATH").replace('\\', '/').replace(replaced, JAVA_HOME));
+			map.put("CLASSPATH", map.get("CLASSPATH").replace('\\', '/').replace(replaced, JAVA_HOME));
+		} catch (Exception e) {
+			System.err.println(map.get("PATH"));
+			e.printStackTrace();
+			System.exit(1);
+		}
 	}
 	
 }
