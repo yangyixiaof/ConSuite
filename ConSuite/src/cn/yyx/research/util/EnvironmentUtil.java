@@ -17,6 +17,7 @@ public class EnvironmentUtil {
 			map.put("PATH", map.get("PATH").replace('\\', '/').replace(replaced, JAVA_HOME));
 			map.put("CLASSPATH", map.get("CLASSPATH").replace('\\', '/').replace(replaced, JAVA_HOME));
 		} catch (Exception e) {
+			System.err.println(map.get("Path"));
 			System.err.println(map.get("PATH"));
 			e.printStackTrace();
 			System.exit(1);
