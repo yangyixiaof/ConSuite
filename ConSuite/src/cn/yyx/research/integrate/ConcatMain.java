@@ -171,6 +171,7 @@ public class ConcatMain {
 			sb.append(" " + ref_args[i]);
 		}
 		String cmd = "java -jar " + ResourceUtil.Evosuite_Master + " -Dassertions=false" + sb.toString();
+		System.out.println("Evosuite Command:" + cmd);
 		cm.RunOneProcess(cmd, true, new DisplayInfo(System.out), new DisplayInfo(System.err));
 
 		Slicer s = new Slicer("evosuite-tests");
